@@ -1,6 +1,6 @@
 package main
 
-import gopython "github.com/davidBMSTU/gopython"
+import gopython "github.com/davidBMSTU/gopython/gopython"
 import "fmt"
 import "os"
 
