@@ -1,13 +1,13 @@
 package gopython
 
-// #cgo pkg-config: python-3.5
-// #include <python3.5m/Python.h>
+// #cgo pkg-config: python3
+// #include <Python.h>
 import "C"
 
 //import "fmt"
 
 // InitPythonInterpretetor inits Python ...
-func InitPythonInterpretetor() {
+func InitPythonInterpretetor35() {
 	intrprInited := C.Py_IsInitialized()
 
 	if intrprInited == 0 {
@@ -20,7 +20,7 @@ func InitPythonInterpretetor() {
 }
 
 // FinalizePythonInterpretetor ends work of Python interpretetor...
-func FinalizePythonInterpretetor() {
+func FinalizePythonInterpretetor35() {
 	//fmt.Println("FinalizePythonInterpretetor was called")
 	intrprInited := C.Py_IsInitialized()
 	//fmt.Printf("isInitstatus = %d\n", intrprInited)

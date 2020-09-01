@@ -1,5 +1,10 @@
 package gopython
 
+//import (
+//	"os/exec"
+//	"strings"
+//)
+
 type PythonObjectsGate struct {
 	version string
 }
@@ -8,18 +13,41 @@ func (pog *PythonObjectsGate) SetVersion(version string) {
 	pog.version = version
 }
 
+// ObtainSystemPythonVersion gets correct python version
 func (pog *PythonObjectsGate) ObtainSystemPythonVersion() error {
-	// get system version
-	// ...
+	/*
+		cmd := exec.Command("bash", "-c", "ls /usr/include/ | grep python")
 
+		res, err := cmd.Output()
+		if err == nil {
+			pythons := strings.Split(string(res), "\n")
+			for i := range pythons {
+				if strings.Contains(pythons[i], "3.5m") {
+					pog.version = "3.5"
+					break
+				}
+
+				if strings.Contains(pythons[i], "3.6m") {
+					pog.version = "3.6"
+					break
+				}
+
+				if strings.Contains(pythons[i], "3.7m") {
+					pog.version = "3.7"
+					break
+				}
+			}
+		}
+	*/
 	pog.version = "3.5"
+
 	return nil
 }
 
 func (pog *PythonObjectsGate) InitPythonInterpretetor() error {
 	switch pog.version {
 	case "3.5":
-		InitPythonInterpretetor()
+		InitPythonInterpretetor35()
 		return nil
 	}
 
@@ -29,7 +57,7 @@ func (pog *PythonObjectsGate) InitPythonInterpretetor() error {
 func (pog *PythonObjectsGate) FinalizePythonInterpretetor() error {
 	switch pog.version {
 	case "3.5":
-		FinalizePythonInterpretetor()
+		FinalizePythonInterpretetor35()
 		return nil
 	}
 

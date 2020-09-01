@@ -1,8 +1,8 @@
 package gopython
 
 /*
-#cgo pkg-config: python-3.5
-#include <python3.5m/Python.h>
+#cgo pkg-config: python3
+#include <Python.h>
 
 static PyObject *
 null_error(void)

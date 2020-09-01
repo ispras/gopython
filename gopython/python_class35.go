@@ -1,7 +1,7 @@
 package gopython
 
-// #cgo pkg-config: python-3.5
-// #include <python3.5m/Python.h>
+// #cgo pkg-config: python3
+// #include <Python.h>
 import "C"
 
 type PythonClass35 struct {
