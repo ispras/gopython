@@ -21,8 +21,8 @@ export PYTHONPATH=/path/to/python/source/code/folder
 You can check correctness of gopython work(does gopython connect with your system python properly?) with test scenario. Run this after installation:
 ```sh
 cd $GOPATH/src/github.com/davidBMSTU/gopython
-export PYTHONPATH=$(pwd)/test
-go run test/main.go
+export PYTHONPATH=$(pwd)/tests
+go run tests/main.go
 ```
 Everything is ok if you get this:
 ```
