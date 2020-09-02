@@ -7,41 +7,22 @@ import "os"
 func main() {
 	InputToPyMethod := "It's 6 o'clock, man!"
 
-	var GateToPython gopython.PythonObjectsGate
-	GateToPython.ObtainSystemPythonVersion()
-	GateToPython.InitPythonInterpretetor()
+	gopython.InitPythonInterpretetor()
 
-	pymodule, err := GateToPython.GetModule()
-	if err != nil {
-		fmt.Println(err)
-		fmt.Println("gopython is NOT OK")
-		os.Exit(1)
-	}
-
+	var pymodule gopython.PythonModule
 	pymodule.SetModuleName("test")
-	err = pymodule.MakeImport()
+	err := pymodule.MakeImport()
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println("gopython is NOT OK")
 		os.Exit(1)
 	}
 
-	initArgs, err := GateToPython.GetArguments()
-	if err != nil {
-		fmt.Println(err)
-		fmt.Println("gopython is NOT OK")
-		os.Exit(1)
-	}
-
+	var initArgs gopython.PythonMethodArguments
 	initArgs.SetArgCount(1)
 	initArgs.SetNextArgument(InputToPyMethod)
 
-	methodArgs, err := GateToPython.GetArguments()
-	if err != nil {
-		fmt.Println(err)
-		fmt.Println("gopython is NOT OK")
-		os.Exit(1)
-	}
+	var methodArgs gopython.PythonMethodArguments
 	methodArgs.SetArgCount(0)
 
 	watthetime, err := pymodule.GetClass("watthetime")
@@ -58,7 +39,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	res, err := watthetimeObj.CallMethod("say_it", methodArgs)
+	res, err := watthetimeObj.CallMethod("say_it", &methodArgs)
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println("gopython is NOT OK")
@@ -84,5 +65,5 @@ func main() {
 		fmt.Println("gopython is NOT OK")
 	}
 
-	GateToPython.FinalizePythonInterpretetor()
+	gopython.FinalizePythonInterpretetor()
 }
