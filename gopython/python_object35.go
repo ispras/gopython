@@ -61,11 +61,11 @@ char* string_from_pyobject(PyObject *obj)
 */
 import "C"
 
-type PythonObject35 struct {
+type PythonObject struct {
 	ObjectPointer *C.PyObject
 }
 
-func (pyobj *PythonObject35) CallMethod(mName string, args PythonMethodArguments) ([]PythonObject, error) {
+func (pyobj *PythonObject) CallMethod(mName string, args *PythonMethodArguments) ([]*PythonObject, error) {
 	if pyobj.ObjectPointer == nil {
 		var e errors
 		e.nilObjectPointer()
@@ -82,9 +82,7 @@ func (pyobj *PythonObject35) CallMethod(mName string, args PythonMethodArguments
 	}
 
 	mNamePy := C.PyUnicode_DecodeFSDefault(mNameC)
-	argsTupleGoInterface := args.GetArgumentsTuple()
-	argsTupleCPointer := argsTupleGoInterface.(*C.PyObject)
-	pyResult := C.PyObject_CallMethodTupleArgs(pyobj.ObjectPointer, mNamePy, argsTupleCPointer)
+	pyResult := C.PyObject_CallMethodTupleArgs(pyobj.ObjectPointer, mNamePy, args.argumentsTurple)
 
 	if pyResult == nil {
 		var e errors
@@ -102,22 +100,22 @@ func (pyobj *PythonObject35) CallMethod(mName string, args PythonMethodArguments
 		resultObjectsCount = int(tmp)
 	}
 
-	res := make([]PythonObject, resultObjectsCount)
+	res := make([]*PythonObject, resultObjectsCount)
 
 	if isTurple == 0 {
-		res[0] = &PythonObject35{ObjectPointer: pyResult}
+		res[0] = &PythonObject{ObjectPointer: pyResult}
 	} else {
 		for i := 0; i < resultObjectsCount; i++ {
 			tmpInd := C.long(i)
 			tmpObjPointer := C.PyTuple_GetItem(pyResult, tmpInd)
-			res[i] = &PythonObject35{ObjectPointer: tmpObjPointer}
+			res[i] = &PythonObject{ObjectPointer: tmpObjPointer}
 		}
 	}
 
 	return res, nil
 }
 
-func (pyobj *PythonObject35) HasAttr(attrName string) (bool, error) {
+func (pyobj *PythonObject) HasAttr(attrName string) (bool, error) {
 	if pyobj.ObjectPointer == nil {
 		var e errors
 		e.nilObjectPointer()
@@ -137,7 +135,7 @@ func (pyobj *PythonObject35) HasAttr(attrName string) (bool, error) {
 	return res, nil
 }
 
-func (pyobj *PythonObject35) GetAttr(attrName string) (PythonObject, error) {
+func (pyobj *PythonObject) GetAttr(attrName string) (*PythonObject, error) {
 	if pyobj.ObjectPointer == nil {
 		var e errors
 		e.nilObjectPointer()
@@ -156,13 +154,13 @@ func (pyobj *PythonObject35) GetAttr(attrName string) (PythonObject, error) {
 
 	// if attrPointer == nil ???
 
-	var resObj PythonObject35
+	var resObj PythonObject
 	resObj.ObjectPointer = attrPointer
 
 	return &resObj, nil
 }
 
-func (pyobj *PythonObject35) GetType() (string, error) {
+func (pyobj *PythonObject) GetType() (string, error) {
 	if pyobj.ObjectPointer == nil {
 		var e errors
 		e.nilObjectPointer()
@@ -174,7 +172,7 @@ func (pyobj *PythonObject35) GetType() (string, error) {
 	return objType, nil
 }
 
-func (pyobj *PythonObject35) IsStandartType() (bool, error) {
+func (pyobj *PythonObject) IsStandartType() (bool, error) {
 	if pyobj.ObjectPointer == nil {
 		var e errors
 		e.nilObjectPointer()
@@ -200,7 +198,7 @@ func (pyobj *PythonObject35) IsStandartType() (bool, error) {
 	return res, nil
 }
 
-func (pyobj *PythonObject35) ToStandartGoType() (interface{}, error) {
+func (pyobj *PythonObject) ToStandartGoType() (interface{}, error) {
 	isStandart, _ := pyobj.IsStandartType()
 	if isStandart == false {
 		var e errors

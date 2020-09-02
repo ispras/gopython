@@ -5,16 +5,16 @@ package gopython
 import "C"
 
 // PythonModule ...
-type PythonModule35 struct {
+type PythonModule struct {
 	moduleName string
 	Module     *C.PyObject
 }
 
-func (pymod *PythonModule35) SetModuleName(moduleName string) {
+func (pymod *PythonModule) SetModuleName(moduleName string) {
 	pymod.moduleName = moduleName
 }
 
-func (pymod *PythonModule35) MakeImport() error {
+func (pymod *PythonModule) MakeImport() error {
 	moduleNameC := C.CString(pymod.moduleName)
 	pythonModuleName := C.PyUnicode_DecodeFSDefault(moduleNameC)
 	importResult := C.PyImport_Import(pythonModuleName)
@@ -30,7 +30,7 @@ func (pymod *PythonModule35) MakeImport() error {
 	return nil
 }
 
-func (pymod *PythonModule35) GetClass(className string) (PythonClass, error) {
+func (pymod *PythonModule) GetClass(className string) (*PythonClass, error) {
 	if pymod.Module == nil {
 		var e errors
 		e.notImportedModule()
@@ -46,7 +46,7 @@ func (pymod *PythonModule35) GetClass(className string) (PythonClass, error) {
 		return nil, &e
 	}
 
-	var res PythonClass35
+	var res PythonClass
 	res.classPointer = resultClass
 
 	return &res, nil

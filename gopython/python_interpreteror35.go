@@ -7,7 +7,7 @@ import "C"
 //import "fmt"
 
 // InitPythonInterpretetor inits Python ...
-func InitPythonInterpretetor35() {
+func InitPythonInterpretetor() {
 	intrprInited := C.Py_IsInitialized()
 
 	if intrprInited == 0 {
@@ -20,7 +20,7 @@ func InitPythonInterpretetor35() {
 }
 
 // FinalizePythonInterpretetor ends work of Python interpretetor...
-func FinalizePythonInterpretetor35() {
+func FinalizePythonInterpretetor() {
 	//fmt.Println("FinalizePythonInterpretetor was called")
 	intrprInited := C.Py_IsInitialized()
 	//fmt.Printf("isInitstatus = %d\n", intrprInited)
