@@ -17,7 +17,7 @@ You need to set path to the folder where python source code files are stored. Th
 export PYTHONPATH=/path/to/python/source/code/folder
 ```
 
-## Test installation
+## Test the installation
 You can check correctness of gopython installation (does gopython connect with your system python properly?) with test scenario. Run this after installation:
 ```sh
 cd $GOPATH/src/github.com/ispras/gopython
@@ -110,7 +110,7 @@ func main() {
 
 Every part of code above is marked with the comment with corresponding python line. Error handling omitted for clarity.
 
-The source code of this example is [here](https://github.com/ispras/cotea/tree/main/examples/calculate). Don't forget to set PYTHONPATH env variable (it must be a path to python source file that you want to embed). In the case of *calculate* example you can do this like this:
+The source code of this example is [here](https://github.com/ispras/gopython/tree/master/examples/calculate). Don't forget to set PYTHONPATH env variable (it must be a path to python source file that you want to embed). In the case of *calculate* example you can do this like this:
 
 ```bash
 export PYTHONPATH=$GOPATH/src/github.com/ispras/gopython/examples/calculate
@@ -124,4 +124,4 @@ export PYTHONPATH=$GOPATH/src/github.com/ispras/gopython/examples/calculate
 
 <!--PythonModule -->
 
-A detailed overview of all interfaces is provided in [gopython documentation](https://github.com/ispras/gopython/blob/main/docs/gopython_docs.md)
+A detailed overview of all interfaces is provided in [gopython documentation](https://github.com/ispras/gopython/blob/master/docs/gopython_docs.md)
