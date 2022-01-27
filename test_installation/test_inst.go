@@ -1,16 +1,19 @@
 package main
 
-import gopython "github.com/davidBMSTU/gopython/gopython"
-import "fmt"
-import "os"
+import (
+	"fmt"
+	"os"
+
+	gopython "github.com/ispras/gopython/src"
+)
 
 func main() {
-	InputToPyMethod := "It's 6 o'clock, man!"
+	InputToPyMethod := "It's 4 AM, man!!!"
 
 	gopython.InitPythonInterpretetor()
 
 	var pymodule gopython.PythonModule
-	pymodule.SetModuleName("test")
+	pymodule.SetModuleName("python_source")
 	err := pymodule.MakeImport()
 	if err != nil {
 		fmt.Println(err)
