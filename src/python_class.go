@@ -8,7 +8,7 @@ type PythonClass struct {
 	classPointer *C.PyObject
 }
 
-func (pyclass *PythonClass) CreateObject(args PythonMethodArguments) (*PythonObject, error) {
+func (pyclass *PythonClass) CreateObject(args *PythonMethodArguments) (*PythonObject, error) {
 	if pyclass.classPointer == nil {
 		var e errors
 		e.classNotInited()
