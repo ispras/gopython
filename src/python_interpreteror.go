@@ -1,7 +1,13 @@
 package gopython
 
-// #cgo pkg-config: python3
-// #include <Python.h>
+/*
+#cgo pkg-config: python3
+#include <Python.h>
+int run_python_string(const char *command)
+{
+	return PyRun_SimpleString(command);
+}
+*/
 import "C"
 
 //import "fmt"
