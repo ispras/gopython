@@ -13,6 +13,9 @@ func InitPythonInterpretetor() {
 	if intrprInited == 0 {
 		C.Py_Initialize()
 		//fmt.Println("Interpreteror was inited")
+		sysBugFixCommand := "import sys\nif not hasattr(sys, 'argv'):\n\tsys.argv  = ['']"
+		sysBugFixCommandC := C.CString(sysBugFixCommand)
+		C.run_python_string(sysBugFixCommandC)
 	}
 	//else {
 	//	fmt.Println("Interpreteror has already inited")

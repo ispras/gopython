@@ -124,4 +124,4 @@ export PYTHONPATH=$GOPATH/src/github.com/ispras/gopython/examples/calculate
 
 <!--PythonModule -->
 
-A detailed overview of all interfaces is provided in [gopython documentation](https://github.com/ispras/gopython/blob/master/docs/gopython_docs.md)
+A detailed overview of all interfaces is provided in [gopython documentation](https://github.com/ispras/gopython/blob/master/docs/gopython_docs.md).
