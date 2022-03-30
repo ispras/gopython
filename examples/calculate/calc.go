@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	gopython "github.com/ispras/gopython/src"
+	gopython "github.com/ispras/gopython/src/gopython"
 )
 
 func main() {
@@ -22,7 +22,7 @@ func main() {
 	var initArgs gopython.PythonMethodArguments
 	initArgs.SetArgCount(0)
 
-	upc_py_obj, _ := upc_py.CreateObject(initArgs)
+	upc_py_obj, _ := upc_py.CreateObject(&initArgs)
 
 	// res = upc.calc(inputForCalc)
 	var calcArgs gopython.PythonMethodArguments

@@ -1,6 +1,6 @@
 package gopython
 
-// #cgo pkg-config: python3
+// #cgo pkg-config: python3-embed
 // #include <Python.h>
 import "C"
 

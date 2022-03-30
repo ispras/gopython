@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	gopython "github.com/ispras/gopython/src"
+	gopython "github.com/ispras/gopython/src/gopython"
 )
 
 func main() {
@@ -35,7 +35,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	watthetimeObj, err := watthetime.CreateObject(initArgs)
+	watthetimeObj, err := watthetime.CreateObject(&initArgs)
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println("gopython is NOT OK")
