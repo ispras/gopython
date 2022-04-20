@@ -2,31 +2,25 @@
 This tool let you embed python code into golang applications. You can create objects, run theire methods, get results of function calls, etc.
 
 ## Installation
-```sh
-go get github.com/ispras/gopython
+1. Create go module:
+```bash
+go mod init PREFERRED_NAME
+```
+2. Include gocotea to your code (located in the created module) with this import:
+```Golang
+import "github.com/ispras/gopython/src/gopython"
+```
+3. Make go mod tidy. This command will download required golang packages (including gopython)
+```bash
+go mod tidy
 ```
 
-## Include into your code
-```go
-import gopython "github.com/ispras/gopython/src"
-```
+Creating a go module is necessary for correct installation of gopython.
 
 ## Before run 
 You need to set path to the folder where python source code files are stored. Therefore execute:
 ```sh
 export PYTHONPATH=/path/to/python/source/code/folder
-```
-
-## Test the installation
-You can check correctness of gopython installation (does gopython connect with your system python properly?) with test scenario. Run this after installation:
-```sh
-cd $GOPATH/src/github.com/ispras/gopython
-export PYTHONPATH=$(pwd)/test_installation
-go run test_installation/test_inst.go
-```
-Everything is ok if you get this:
-```
-gopython is OK
 ```
 
 ## Examples
@@ -73,7 +67,7 @@ package main
 import (
 	"fmt"
 
-	gopython "github.com/ispras/gopython/src"
+	gopython "github.com/ispras/gopython/src/gopython"
 )
 
 func main() {
@@ -110,18 +104,7 @@ func main() {
 
 Every part of code above is marked with the comment with corresponding python line. Error handling omitted for clarity.
 
-The source code of this example is [here](https://github.com/ispras/gopython/tree/master/examples/calculate). Don't forget to set PYTHONPATH env variable (it must be a path to python source file that you want to embed). In the case of *calculate* example you can do this like this:
+The source code of this example is [here](https://github.com/ispras/gopython/tree/master/examples/calculate). Don't forget to set PYTHONPATH env variable (it must be a path to python source file that you want to embed). In the case of *calculate* example it must be a PATH to calculate/ dir where unique_calc.py is located.
 
-```bash
-export PYTHONPATH=$GOPATH/src/github.com/ispras/gopython/examples/calculate
-```
-
-<!--The main gopython abstractions are:-->
-<!--- PythonModule-->
-<!--- PythonClass-->
-<!--- PythonObject-->
-<!--- PythonMethodArguments-->
-
-<!--PythonModule -->
 
 A detailed overview of all interfaces is provided in [gopython documentation](https://github.com/ispras/gopython/blob/master/docs/gopython_docs.md).
