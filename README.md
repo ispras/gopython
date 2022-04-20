@@ -6,7 +6,7 @@ This tool let you embed python code into golang applications. You can create obj
 ```bash
 go mod init PREFERRED_NAME
 ```
-2. Include gocotea to your code (located in the created module) with this import:
+2. Include gopython to your code (located in the created module) with this import:
 ```Golang
 import "github.com/ispras/gopython/src/gopython"
 ```
