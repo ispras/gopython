@@ -232,6 +232,206 @@ func (pyobj *PythonObject) ToStandartGoType() (interface{}, error) {
 	return res, nil
 }
 
+func (pyobj *PythonObject) CreateFromGoSlice(goSlice interface{}) error {
+	correctSliceType := true
+
+	switch v := goSlice.(type) {
+	case []int:
+		elementsCount := len(v)
+		cElementsCount := C.long(elementsCount)
+		pyobj.ObjectPointer = C.PyList_New(cElementsCount)
+
+		for i := 0; i < elementsCount; i += 1 {
+			tmp := C.long(v[i])
+			ind := C.long(i)
+			intArg := C.PyLong_FromLong(tmp)
+
+			C.PyList_SetItem(pyobj.ObjectPointer, ind, intArg)
+		}
+
+	case [][]int:
+		rowsCount := len(v)
+		cRowsCount := C.long(rowsCount)
+		pyobj.ObjectPointer = C.PyList_New(cRowsCount)
+
+		for i := 0; i < rowsCount; i += 1 {
+			tmpRowLen := len(v[i])
+			cTmpRowLen := C.long(tmpRowLen)
+			tmpRowPy := C.PyList_New(cTmpRowLen)
+
+			for j := 0; j < tmpRowLen; j += 1 {
+				tmp := C.long(v[i][j])
+				ind := C.long(j)
+				intArg := C.PyLong_FromLong(tmp)
+
+				C.PyList_SetItem(tmpRowPy, ind, intArg)
+			}
+
+			ind := C.long(i)
+			C.PyList_SetItem(pyobj.ObjectPointer, ind, tmpRowPy)
+		}
+
+	case []float64:
+		elementsCount := len(v)
+		cElementsCount := C.long(elementsCount)
+		pyobj.ObjectPointer = C.PyList_New(cElementsCount)
+
+		for i := 0; i < elementsCount; i += 1 {
+			tmp := C.double(v[i])
+			ind := C.long(i)
+			floatArg := C.PyFloat_FromDouble(tmp)
+
+			C.PyList_SetItem(pyobj.ObjectPointer, ind, floatArg)
+		}
+
+	case []string:
+		elementsCount := len(v)
+		cElementsCount := C.long(elementsCount)
+		pyobj.ObjectPointer = C.PyList_New(cElementsCount)
+
+		for i := 0; i < elementsCount; i += 1 {
+			tmp := C.CString(v[i])
+			ind := C.long(i)
+			stringArg := C.PyUnicode_DecodeFSDefault(tmp)
+
+			C.PyList_SetItem(pyobj.ObjectPointer, ind, stringArg)
+		}
+
+	case []*PythonObject:
+		elementsCount := len(v)
+		cElementsCount := C.long(elementsCount)
+		pyobj.ObjectPointer = C.PyList_New(cElementsCount)
+
+		for i := 0; i < elementsCount; i += 1 {
+			ind := C.long(i)
+
+			C.PyList_SetItem(pyobj.ObjectPointer, ind, v[i].ObjectPointer)
+		}
+
+	default:
+		correctSliceType = false
+	}
+
+	if !correctSliceType {
+		var e errors
+		e.notSupportedGoSlice()
+		return &e
+	}
+
+	return nil
+}
+
+func (pyobj *PythonObject) GetGoSliceFromPyList() (interface{}, error) {
+	cListLen := C.PyList_Size(pyobj.ObjectPointer)
+	listLen := int(cListLen)
+
+	if listLen < 1 {
+		var e errors
+		e.pyListEmpty()
+		return nil, &e
+	}
+
+	zero := C.long(0)
+	cFirstElem := C.PyList_GetItem(pyobj.ObjectPointer, zero)
+
+	var firstElem PythonObject
+	firstElem.ObjectPointer = cFirstElem
+	isStandartType, err := firstElem.IsStandartType()
+	if err != nil {
+		return nil, err
+	}
+
+	if !isStandartType {
+		var e errors
+		e.notSupportedPyList()
+		return nil, &e
+	}
+
+	firstElemType, err := firstElem.GetType()
+	if err != nil {
+		return nil, err
+	}
+
+	oneTypeList := true
+
+	for i := 0; i < listLen; i += 1 {
+		ind := C.long(i)
+		listElem := C.PyList_GetItem(pyobj.ObjectPointer, ind)
+
+		var tmpPyObject PythonObject
+		tmpPyObject.ObjectPointer = listElem
+
+		tmpType, err := tmpPyObject.GetType()
+		if err != nil {
+			return nil, err
+		}
+
+		if tmpType != firstElemType {
+			oneTypeList = false
+			break
+		}
+	}
+
+	if !oneTypeList {
+		var e errors
+		e.pyListWithDifferentTypes()
+		return nil, &e
+	}
+
+	switch firstElemType {
+	case "int":
+		resSlice := make([]int, listLen)
+
+		for i := 0; i < listLen; i += 1 {
+			ind := C.long(i)
+			listElem := C.PyList_GetItem(pyobj.ObjectPointer, ind)
+
+			var tmpPyObject PythonObject
+			tmpPyObject.ObjectPointer = listElem
+
+			tmpInterface, err := tmpPyObject.ToStandartGoType()
+			if err != nil {
+				return nil, err
+			}
+
+			resSlice[i] = tmpInterface.(int)
+		}
+
+		return resSlice, nil
+
+	case "float":
+		resSlice := make([]float64, listLen)
+
+		for i := 0; i < listLen; i += 1 {
+			ind := C.long(i)
+			listElem := C.PyList_GetItem(pyobj.ObjectPointer, ind)
+
+			var tmpPyObject PythonObject
+			tmpPyObject.ObjectPointer = listElem
+
+			tmpInterface, err := tmpPyObject.ToStandartGoType()
+			if err != nil {
+				return nil, err
+			}
+
+			resSlice[i] = tmpInterface.(float64)
+		}
+
+		return resSlice, nil
+
+	}
+
+	return nil, nil
+}
+
+func CreatePythonListFromGoSlice(goSlice interface{}) (*PythonObject, error) {
+	var resPythonObject PythonObject
+
+	err := resPythonObject.CreateFromGoSlice(goSlice)
+
+	return &resPythonObject, err
+}
+
 // TODO: get object attr - 									 DONE
 // TODO: hasAttr - 											 DONE
 // TODO: conversesion to go type if PythonObject is standart

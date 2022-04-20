@@ -41,3 +41,19 @@ func (e *errors) notStandartType() {
 	e.msg = `Type of pyobject is not standart. You can
 			 check it with IsStandartType method`
 }
+
+func (e *errors) notSupportedGoSlice() {
+	e.msg = `Type of go slice is not supported yet.`
+}
+
+func (e *errors) pyListEmpty() {
+	e.msg = `Python list should has at least one element.`
+}
+
+func (e *errors) notSupportedPyList() {
+	e.msg = `The list's elements type is not supported yet. (first element of the list was checked)`
+}
+
+func (e *errors) pyListWithDifferentTypes() {
+	e.msg = `Python list has elements of different types`
+}

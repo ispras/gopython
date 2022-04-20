@@ -43,3 +43,10 @@ func (pyargs *PythonMethodArguments) SetNextArgument(arg interface{}) {
 
 	pyargs.curArgIndex++
 }
+
+func GetPythonMethodArgsWithSpecificLen(argsCount int) (*PythonMethodArguments, error) {
+	var resArgs PythonMethodArguments
+	resArgs.SetArgCount(argsCount)
+
+	return &resArgs, nil
+}
