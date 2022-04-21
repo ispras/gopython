@@ -17,6 +17,8 @@ go mod tidy
 
 Creating a go module is necessary for correct installation of gopython.
 
+Tested on ubuntu 20.04 with golang 1.18.
+
 ## Before run 
 You need to set path to the folder where python source code files are stored. Therefore execute:
 ```sh
