@@ -321,9 +321,26 @@ func (pyobj *PythonObject) CreateFromGoSlice(goSlice interface{}) error {
 	return nil
 }
 
-func (pyobj *PythonObject) GetGoSliceFromPyList() (interface{}, error) {
+func (pyobj *PythonObject) GetPythonObjectsFromPyList() []*PythonObject {
 	cListLen := C.PyList_Size(pyobj.ObjectPointer)
 	listLen := int(cListLen)
+
+	res := make([]*PythonObject, listLen)
+
+	for i := 0; i < listLen; i += 1 {
+		ind := C.long(i)
+		listElem := C.PyList_GetItem(pyobj.ObjectPointer, ind)
+
+		res[i] = &PythonObject{ObjectPointer: listElem}
+	}
+
+	return res
+}
+
+func (pyobj *PythonObject) GetGoSliceFromPyList() (interface{}, error) {
+	pyObjectsOfList := pyobj.GetPythonObjectsFromPyList()
+
+	listLen := len(pyObjectsOfList)
 
 	if listLen < 1 {
 		var e errors
@@ -331,12 +348,7 @@ func (pyobj *PythonObject) GetGoSliceFromPyList() (interface{}, error) {
 		return nil, &e
 	}
 
-	zero := C.long(0)
-	cFirstElem := C.PyList_GetItem(pyobj.ObjectPointer, zero)
-
-	var firstElem PythonObject
-	firstElem.ObjectPointer = cFirstElem
-	isStandartType, err := firstElem.IsStandartType()
+	isStandartType, err := pyObjectsOfList[0].IsStandartType()
 	if err != nil {
 		return nil, err
 	}
@@ -347,7 +359,7 @@ func (pyobj *PythonObject) GetGoSliceFromPyList() (interface{}, error) {
 		return nil, &e
 	}
 
-	firstElemType, err := firstElem.GetType()
+	firstElemType, err := pyObjectsOfList[0].GetType()
 	if err != nil {
 		return nil, err
 	}
@@ -355,13 +367,7 @@ func (pyobj *PythonObject) GetGoSliceFromPyList() (interface{}, error) {
 	oneTypeList := true
 
 	for i := 0; i < listLen; i += 1 {
-		ind := C.long(i)
-		listElem := C.PyList_GetItem(pyobj.ObjectPointer, ind)
-
-		var tmpPyObject PythonObject
-		tmpPyObject.ObjectPointer = listElem
-
-		tmpType, err := tmpPyObject.GetType()
+		tmpType, err := pyObjectsOfList[i].GetType()
 		if err != nil {
 			return nil, err
 		}
@@ -383,13 +389,7 @@ func (pyobj *PythonObject) GetGoSliceFromPyList() (interface{}, error) {
 		resSlice := make([]int, listLen)
 
 		for i := 0; i < listLen; i += 1 {
-			ind := C.long(i)
-			listElem := C.PyList_GetItem(pyobj.ObjectPointer, ind)
-
-			var tmpPyObject PythonObject
-			tmpPyObject.ObjectPointer = listElem
-
-			tmpInterface, err := tmpPyObject.ToStandartGoType()
+			tmpInterface, err := pyObjectsOfList[i].ToStandartGoType()
 			if err != nil {
 				return nil, err
 			}
@@ -403,13 +403,7 @@ func (pyobj *PythonObject) GetGoSliceFromPyList() (interface{}, error) {
 		resSlice := make([]float64, listLen)
 
 		for i := 0; i < listLen; i += 1 {
-			ind := C.long(i)
-			listElem := C.PyList_GetItem(pyobj.ObjectPointer, ind)
-
-			var tmpPyObject PythonObject
-			tmpPyObject.ObjectPointer = listElem
-
-			tmpInterface, err := tmpPyObject.ToStandartGoType()
+			tmpInterface, err := pyObjectsOfList[i].ToStandartGoType()
 			if err != nil {
 				return nil, err
 			}
