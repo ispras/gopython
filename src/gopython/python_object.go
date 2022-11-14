@@ -115,6 +115,46 @@ func (pyobj *PythonObject) CallMethod(mName string, args *PythonMethodArguments)
 	return res, nil
 }
 
+func (pyobj *PythonObject) CallItself(args *PythonMethodArguments) ([]*PythonObject, error) {
+	if pyobj.ObjectPointer == nil {
+		var e errors
+		e.nilObjectPointer()
+		return nil, &e
+	}
+
+	pyResult := C.PyObject_CallObject(pyobj.ObjectPointer, args.argumentsTurple)
+
+	if pyResult == nil {
+		var e errors
+		e.errorDuringMethodCall("Itself call")
+		return nil, &e
+	}
+
+	isTurple := C.PyTuple_CheckFunc(pyResult)
+	var resultObjectsCount int
+
+	if isTurple == 0 {
+		resultObjectsCount = 1
+	} else {
+		tmp := C.PyTuple_Size(pyResult)
+		resultObjectsCount = int(tmp)
+	}
+
+	res := make([]*PythonObject, resultObjectsCount)
+
+	if isTurple == 0 {
+		res[0] = &PythonObject{ObjectPointer: pyResult}
+	} else {
+		for i := 0; i < resultObjectsCount; i++ {
+			tmpInd := C.long(i)
+			tmpObjPointer := C.PyTuple_GetItem(pyResult, tmpInd)
+			res[i] = &PythonObject{ObjectPointer: tmpObjPointer}
+		}
+	}
+
+	return res, nil
+}
+
 func (pyobj *PythonObject) HasAttr(attrName string) (bool, error) {
 	if pyobj.ObjectPointer == nil {
 		var e errors

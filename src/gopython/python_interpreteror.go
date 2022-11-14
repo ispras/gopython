@@ -42,3 +42,8 @@ func FinalizePythonInterpretetor() {
 	//	fmt.Println("Interpreteror has already finilized")
 	//}
 }
+
+func RunPythonString(pycode string) {
+	pycodeC := C.CString(pycode)
+	C.run_python_string(pycodeC)
+}

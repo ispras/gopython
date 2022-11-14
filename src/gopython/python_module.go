@@ -51,3 +51,25 @@ func (pymod *PythonModule) GetClass(className string) (*PythonClass, error) {
 
 	return &res, nil
 }
+
+func (pymod *PythonModule) GetObject(objName string) (*PythonObject, error) {
+	if pymod.Module == nil {
+		var e errors
+		e.notImportedModule()
+		return nil, &e
+	}
+
+	objNameC := C.CString(objName)
+	resultObj := C.PyObject_GetAttrString(pymod.Module, objNameC)
+
+	if resultObj == nil || C.PyCallable_Check(resultObj) == 0 {
+		var e errors
+		e.gettingObjectFailed()
+		return nil, &e
+	}
+
+	var res PythonObject
+	res.ObjectPointer = resultObj
+
+	return &res, nil
+}
