@@ -16,8 +16,11 @@ func (pyclass *PythonClass) CreateObject(args *PythonMethodArguments) (*PythonOb
 	}
 
 	pObj := C.PyObject_CallObject(pyclass.classPointer, args.argumentsTurple)
-
-	// TODO: check, that pObj OK
+	if pObj == nil {
+		var e errors
+		e.errorDuringMethodCall("__init__")
+		return nil, &e
+	}
 
 	var resObj PythonObject
 	resObj.ObjectPointer = pObj

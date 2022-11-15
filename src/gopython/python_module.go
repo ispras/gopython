@@ -62,7 +62,7 @@ func (pymod *PythonModule) GetObject(objName string) (*PythonObject, error) {
 	objNameC := C.CString(objName)
 	resultObj := C.PyObject_GetAttrString(pymod.Module, objNameC)
 
-	if resultObj == nil || C.PyCallable_Check(resultObj) == 0 {
+	if resultObj == nil {
 		var e errors
 		e.gettingObjectFailed()
 		return nil, &e
