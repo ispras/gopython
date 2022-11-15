@@ -17,7 +17,8 @@ func (pyclass *PythonClass) CreateObject(args *PythonMethodArguments) (*PythonOb
 
 	pObj := C.PyObject_CallObject(pyclass.classPointer, args.argumentsTurple)
 
-	// TODO: check, that pObj OK
+	// It will panic, if exception was occured in python code
+	HandlePossibleException()
 
 	var resObj PythonObject
 	resObj.ObjectPointer = pObj
