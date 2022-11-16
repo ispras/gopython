@@ -51,7 +51,7 @@ func TestCreateObject(t *testing.T) {
 		t.Fatalf("Expected err nil, but received: %s", err)
 	}
 
-	// defer os.Remove(testingModuleName + ".py")
+	defer os.Remove(testingModuleName + ".py")
 
 	t.Run("passing int test", func(t *testing.T) {
 		testClassPy, err := testModule.GetClass(classNameInt)
